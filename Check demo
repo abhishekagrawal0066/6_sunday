@@ -1,0 +1,263 @@
+<?php
+if (!isset($_SESSION['email'])) {
+    header("Location:admin_login.php");
+}
+session_start();
+session_destroy();
+session_unset();
+header("Location:admin_login.php");
+
+
+
+abstract class Person
+{
+    public $name;
+    public $age;
+    public $gender;
+
+    function __construct($name, $age, $gender)
+    {
+        $this->name = $name;
+        $this->age = $age;
+        $this->gender = $gender;
+    }
+    abstract function introduce();
+    function greet($name)
+    {
+        return "Hello " . $name;
+    }
+}
+
+class Child extends Person
+{
+    public $aspirations;
+    function __construct($name, $age, $gender, $aspirations)
+    {
+        parent::__construct($name, $age, $gender);
+        $this->aspirations = $aspirations;
+    }
+    function introduce()
+    {
+        return "Hi, I'm <span class='text-info'>" . $this->name . "</span> and I'm <span class='text-info'>" . $this->age . "</span> years old.";
+    }
+
+    function greet($name)
+    {
+        return "Hi <span class='text-info'>" . $name . "</span>, Let's Play!";
+    }
+
+    function say_dreams()
+    {
+        return "I would like to be <span class='text-info'>" . ucfirst(implode(", ", $this->aspirations)) . "</span> when i grow up.";
+    }
+}
+
+
+class SoftwareDeveloper extends Person
+{
+    public $position;
+    function __construct($name, $age, $gender, $position)
+    {
+        parent::__construct($name, $age, $gender);
+        $this->position = $position;
+    }
+    function introduce()
+    {
+        return "Hello, my name is <span class='text-info'>$this->name</span>, I am <span class='text-info'>$this->age</span> years old and I am a <span class='text-info'>" . ucfirst($this->position) . " </span>Developer.";
+    }
+    function greet($name)
+    {
+        return "Hello, i'm <span class='text-info'>$this->name</span>, Nice to meet you.";
+    }
+    function describeJob()
+    {
+        return "I am currently working as a <span class='text-info'>" . ucfirst($this->position) . "</span> Developer at Radix.";
+    }
+}
+?>
+
+
+
+<?php
+if (isset($_POST['detail']) && $_POST['detail'] == "save") {
+    if (empty($_POST['iam'])) {
+        $message1 = "<span class='text-center text-danger'>Select me...</span><br>";
+    } else {
+        $iam = $_POST['iam'];
+    }
+    if (empty($_POST['name'])) {
+        $message2 =  "<span class='text-center text-danger'>Enter Name</span><br>";
+    } else {
+        $name = $_POST['name'];
+    }
+    if (empty($_POST['age'])) {
+        $message3 = "<span class='text-center text-danger'>Select Age</span><br>";
+    } else {
+        $age = $_POST['age'];
+    }
+    if (empty($_POST['gender'])) {
+        $message4 = "<span class='text-center text-danger'>Enter gender</span><br>";
+    } else {
+        $gender = $_POST['gender'];
+    }
+}
+?>
+<?php
+
+?>
+<div class="container-fluid  py-5">
+    <div class="row">
+     
+        <div class="col-lg-9">
+            <div class="file-data">
+                <div class="display-6">
+                    Create one form with below user inputs
+                    <ul class="h6">
+                        <li>I am a: Dropdown of “Child” and “Software Developer”</li>
+                        <li>My Name: Textbox to enter name</li>
+                        <li>My Age: Textbox to enter age</li>
+                        <li>Gender: Dropdown of “Male” and “Female”</li>
+                        <li>My Dreams (Visible only If you have selected “Child”): checkbox with list of “Doctor”,“Engineer”,“Lawyer” and “Police Officer”</li>
+                        <li>My Position (Visible only If you have selected “Software developer”): “Backend Developer”,“Front End Developer”, “Full Stack Developer”</li>
+                    </ul>
+                    On submission of form all details must be shown using appropriate class methods.
+                </div>
+                <hr class="py-1">
+                <h4 class="mb-3 text-secondary">Fill the form...</h4>
+                <form action="" method="post">
+                    <div class="col">
+                        <div class="col-sm-5 mb-3">
+                            <div class="input-group">
+                                <label class="input-group-text" for="iam">I am a </label>
+                                <select class="form-select" id="iam" name="iam">
+                                    <option selected disabled>Select</option>
+                                    <option value="child">Child</option>
+                                    <option value="software">Software Developer</option>
+                                </select>
+                            </div>
+                            <span><?php if (isset($message1)) {
+                                        echo $message1;
+                                    } ?></span>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <div class="input-group">
+                                <label for="name" class="input-group-text">My Name is </label>
+                                <input type="text" placeholder=". . ." name="name" class="form-control">
+                            </div>
+                            <span><?php if (isset($message2)) {
+                                        echo $message2;
+                                    } ?></span>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <div class="input-group">
+                                <label for="age" class="input-group-text">My Age is </label>
+                                <input type="number" placeholder=". . ." name="age" class="form-control">
+                            </div>
+                            <span><?php if (isset($message3)) {
+                                        echo $message3;
+                                    } ?></span>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <div class="input-group">
+                                <label class="input-group-text" for="gender">My Gender is </label>
+                                <select class="form-select" id="gender" name="gender">
+                                    <option selected disabled>Select</option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <span><?php if (isset($message4)) {
+                                        echo $message4;
+                                    } ?></span>
+                        </div>
+                        <div class="col-sm-5 mb-3">
+                            <script>
+                                $(document).ready(function() {
+                                    $("#iam").change(function() {
+                                        $(this).find("option:selected").each(function() {
+                                            var val = $(this).attr("value");
+                                            if (val) {
+                                                $(".msg").not("." + val).hide();
+                                                $("." + val).show();
+                                            } else {
+                                                $(".msg").hide();
+                                            }
+                                        });
+                                    }).change();
+                                });
+                            </script>
+                            <div class="child msg">
+                                <h5 class="text-secondary h5">My Dreams : </h5>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="doctor" name="dreams[]" value="doctor">
+                                    <label class="form-check-label" for="doctor">Doctor</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="Engineer" name="dreams[]" value="engineer">
+                                    <label class="form-check-label" for="Engineer">Engineer</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="lawyer" name="dreams[]" value="lawyer">
+                                    <label class="form-check-label" for="lawyer">Lawyer</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="checkbox" id="policeOfficer" name="dreams[]" value="policeOfficer">
+                                    <label class="form-check-label" for="policeOfficer">Police Officer</label>
+                                </div>
+                            </div>
+                            <div class="software msg">
+                                <select class="form-select" id="position" name="position">
+                                    <option selected disabled>Select Position</option>
+                                    <option value="frontend">Frontend Developer</option>
+                                    <option value="backend">Backend Developer</option>
+                                    <option value="fullstack">Fullstack Developer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn btn-success" type="submit" name="detail" value="save">Submit</button>
+                    </div>
+                </form>
+                <?php
+                if (isset($name, $iam, $age, $gender)) {
+                    if ($iam == "child") {
+                        if (empty($_POST['dreams'])) {
+                            $message5 = "<span class='text-center text-danger'>Enter Position</span><br>";
+                        } else {
+                            foreach ($_POST['dreams'] as $value) {
+                                $allDreams[] = $value;
+                                $obj = new Child($name, $age, $age, $allDreams);
+                                $job = $obj->say_dreams();
+                                $greet = $obj->greet($name);
+                                $intro = $obj->introduce();
+                            }
+                        }
+                    }
+                    if ($iam == "software") {
+                        if (empty($_POST['position'])) {
+                            $message5 = "<span class='text-center text-danger'>Enter Position</span><br>";
+                        } else {
+                            $position = $_POST['position'];
+                            $obj = new SoftwareDeveloper($name, $age, $gender, $position);
+                            $greet = $obj->greet($name);
+                            $intro = $obj->introduce();
+                            $job = $obj->describeJob($position);
+                        }
+                    }
+                }
+                if (isset($intro, $job, $greet)) {
+                ?>
+                    <hr>
+                    <h4 class="text-secondary">
+                        <?php echo $greet; ?></h4>
+                    <h4 class="text-secondary">
+                        <?php echo $intro; ?></h4>
+                    <h4 class="text-secondary">
+                    <?php echo $job;
+                } ?></h4>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+
+?>
