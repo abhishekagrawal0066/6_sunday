@@ -1,0 +1,51 @@
+ <?php
+
+if (isset($_POST['submit'])) {
+	
+	$image=$_FILES['image'];
+  
+	$ext= pathinfo($image['name'], PATHINFO_EXTENSION);
+
+	if ($ext=='PNG' || $ext=='jpg' || $ext=='pdf' ) {
+		$ok=1;
+	}else{
+		echo "type error";
+	}
+    if ($image['size']>1000000) {
+        
+		echo "error of size";
+	}else{
+        $ook=1;
+    }
+	
+	if ((isset($ok) && isset($ook))==1) {
+		move_uploaded_file($image['tmp_name'],"imagee_check/".$image['name']);
+        header('Location: next.php');
+		
+	}
+}
+
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <h3>FORM IMAGE RADIO CHECKBOX</h3>
+        <a href="index.php">List</a>
+            <tr>
+                <td>IMAGE</td>
+                <td><input type="file" name="image"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" name="submit"></td>
+            </tr>
+    </form>
+</body>
+</html>
