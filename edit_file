@@ -1,0 +1,92 @@
+<?php
+$conn=mysqli_connect("localhost","root","","employee");
+if (isset($_GET['id'])) {
+	$query="SELECT * FROM image WHERE id =".$_GET['id'];
+
+	$res=mysqli_query($conn,$query);
+	$responce=mysqli_fetch_assoc($res);
+}
+
+if (isset($_POST['update'])) {
+	$hobby=$_POST['hobby'];
+	$newhobby=implode(",", $hobby);
+	$gendar=$_POST['gendar'];
+	$image=$_FILES['image'];
+	/*echo "<pre>";
+	print_r($image);*/
+	
+	$query="UPDATE `image` SET `hobby`='$newhobby',`gender`='$gendar',`image`='".$image['name']."' WHERE id=".$_GET['id'];
+	move_uploaded_file($image['tmp_name'], "imagee/".$image['name']);
+
+	$ress=mysqli_query($conn,$query);
+	if ($ress) {
+		echo "Update";
+	}else{
+		echo "error";
+	}
+
+}
+ 	if (isset($_GET['id'])) {
+ 		$id=$_GET['id'];
+
+ 		$query="SELECT * FROM `image` WHERE id=".$id;
+ 		$result= mysqli_query($conn,$query);
+
+ 		$responce=mysqli_fetch_assoc($result);
+ 		$hobby = explode(',', $responce['hobby']);
+
+ 	}
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<form method="post" enctype="multipart/form-data">
+		<h3>FORM IMAGE RADIO CHECKBOX</h3>
+		<a href="index.php">List</a>
+		<table border="1" style="border-collapse: collapse;">
+			<tr>
+				<td>Hobby</td>
+				<td>
+					<input type="checkbox" name="hobby[]" value="java" <?php if (in_array("java", $hobby)) {
+        	echo "checked";
+        } ?>>JAVA
+					<input type="checkbox" name="hobby[]" value="php" <?php if (in_array("php", $hobby)) {
+        	echo "checked";
+        } ?>>PHP
+					<input type="checkbox" name="hobby[]" value="android" <?php if (in_array("android", $hobby)) {
+        	echo "checked";
+        } ?>>ANDROID
+			   </td>
+			</tr>
+			<tr>
+				<td>Gendar</td>
+				<td>
+					<input type="radio" name="gendar" value="male"  <?php if ($responce['gender']=="male") {
+                        echo "checked";
+                    } ?>>Male
+					<input type="radio" name="gendar" value="female" <?php if ($responce['gender']=="female") {
+                        echo "checked";
+                    } ?>>Female
+					<input type="radio" name="gendar" value="other"<?php if ($responce['gender']=="other") {
+                        echo "checked";
+                    } ?>>Other
+				</td>
+			</tr>
+			<tr>
+				<td>IMAGE</td>
+				<td>
+					<img width = "100" src="imagee/<?php echo $responce['image']; ?>">
+					<input type="file" name="image"></td>
+			</tr>
+
+			<tr>
+				<td colspan="2"><input type="submit" name="update"></td>
+			</tr>
+		</table>
+	</form>
+</body>
+</html>
