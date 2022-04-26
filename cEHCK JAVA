@@ -1,0 +1,58 @@
+if (isset($_POST['submit'])) {
+    $image=$_FILES['image'];
+    if (empty($image['error']<=0)) {
+        $urlerror = "Enter Image";
+        $error1 = false;
+    }else{
+        $Enterurl = $_FILES['image'];
+        $error1 = true;
+    }
+
+    $ext= pathinfo($image['name'], PATHINFO_EXTENSION);
+
+	if ($ext=='PNG' || $ext=='jpg' || $ext=='pdf' ) {
+		$error11 = true;
+	}else{
+
+		$urlerror1 = "type error";
+        $error11 = false;
+	}
+    if ($image['size']>1000000) {
+        
+		$urlerror1 = "error of size";
+        $error12 = false;
+	}else{
+        
+        $error12 = true;
+    }
+
+    if(($error1 && $error11 && $error12 ) == true){
+
+		
+        header('Location: next.php');
+		
+	}
+   
+}
+
+
+
+<script>
+        function fornValid() {
+            var photo_val = document.getElementById('image').value;
+            if (photo_val == "") {
+                var urlerror = "Select Photo";
+                error = false;
+            } else {
+                urlerror = ""
+                error = true;
+            }
+        document.getElementById('photoerror').innerHTML = urlerror;
+        document.getElementById('photoerror').style.color = "Red";
+
+        if ((error) == true) {
+            alert("Done");
+        }
+        return false;
+        }
+    </script>
