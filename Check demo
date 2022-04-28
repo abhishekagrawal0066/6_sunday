@@ -1,263 +1,421 @@
 <?php
-if (!isset($_SESSION['email'])) {
-    header("Location:admin_login.php");
-}
-session_start();
-session_destroy();
-session_unset();
-header("Location:admin_login.php");
-
-
-
-abstract class Person
-{
-    public $name;
-    public $age;
-    public $gender;
-
-    function __construct($name, $age, $gender)
-    {
-        $this->name = $name;
-        $this->age = $age;
-        $this->gender = $gender;
-    }
-    abstract function introduce();
-    function greet($name)
-    {
-        return "Hello " . $name;
-    }
-}
-
-class Child extends Person
-{
-    public $aspirations;
-    function __construct($name, $age, $gender, $aspirations)
-    {
-        parent::__construct($name, $age, $gender);
-        $this->aspirations = $aspirations;
-    }
-    function introduce()
-    {
-        return "Hi, I'm <span class='text-info'>" . $this->name . "</span> and I'm <span class='text-info'>" . $this->age . "</span> years old.";
-    }
-
-    function greet($name)
-    {
-        return "Hi <span class='text-info'>" . $name . "</span>, Let's Play!";
-    }
-
-    function say_dreams()
-    {
-        return "I would like to be <span class='text-info'>" . ucfirst(implode(", ", $this->aspirations)) . "</span> when i grow up.";
-    }
-}
-
-
-class SoftwareDeveloper extends Person
-{
-    public $position;
-    function __construct($name, $age, $gender, $position)
-    {
-        parent::__construct($name, $age, $gender);
-        $this->position = $position;
-    }
-    function introduce()
-    {
-        return "Hello, my name is <span class='text-info'>$this->name</span>, I am <span class='text-info'>$this->age</span> years old and I am a <span class='text-info'>" . ucfirst($this->position) . " </span>Developer.";
-    }
-    function greet($name)
-    {
-        return "Hello, i'm <span class='text-info'>$this->name</span>, Nice to meet you.";
-    }
-    function describeJob()
-    {
-        return "I am currently working as a <span class='text-info'>" . ucfirst($this->position) . "</span> Developer at Radix.";
-    }
-}
-?>
-
-
-
-<?php
-if (isset($_POST['detail']) && $_POST['detail'] == "save") {
-    if (empty($_POST['iam'])) {
-        $message1 = "<span class='text-center text-danger'>Select me...</span><br>";
+if (isset($_POST['submit']) && $_POST['submit'] == "submit") {
+    if (empty($_POST['fname'])) {
+        $message1 = "<span class='text-danger'>Please Enter Firstname</span>";
     } else {
-        $iam = $_POST['iam'];
+        $fname = $_POST['fname'];
     }
-    if (empty($_POST['name'])) {
-        $message2 =  "<span class='text-center text-danger'>Enter Name</span><br>";
+    if (empty($_POST['mname'])) {
+        $message2 = "<span class='text-danger'>Please Enter Middlename</span>";
     } else {
-        $name = $_POST['name'];
+        $mname = $_POST['mname'];
+    }
+    if (empty($_POST['lname'])) {
+        $message3 = "<span class='text-danger'>Please Enter Lastname</span>";
+    } else {
+        $lanme = $_POST['lname'];
+    }
+    if (empty($_POST['username'])) {
+        $message4 = "<span class='text-danger'>Please Enter Username</span>";
+    } else {
+        $username = $_POST['username'];
+    }
+    if (empty($_POST['password'])) {
+        $message5 = "<span class='text-danger'>Please Enter Password</span>";
+    } else {
+        $password = $_POST['password'];
     }
     if (empty($_POST['age'])) {
-        $message3 = "<span class='text-center text-danger'>Select Age</span><br>";
+        $message6 = "<span class='text-danger'>Please Enter Age</span>";
     } else {
         $age = $_POST['age'];
     }
-    if (empty($_POST['gender'])) {
-        $message4 = "<span class='text-center text-danger'>Enter gender</span><br>";
+    if (empty($_POST['dob'])) {
+        $message7 = "<span class='text-danger'>Please Select Birthdate</span>";
     } else {
-        $gender = $_POST['gender'];
+        $dob = $_POST['dob'];
+    }
+    if (empty($_POST['education'])) {
+        $message8 = "<span class='text-danger'>Please Select Education</span>";
+    } else {
+        $education = $_POST['education'];
+    }
+    if (empty($_POST['email'])) {
+        $message9 = "<span class='text-danger'>Please Enter email</span>";
+    } else {
+        $email = $_POST['email'];
+    }
+    if (empty($_POST['address'])) {
+        $message10 = "<span class='text-danger'>Please Enter Address</span>";
+    } else {
+        $address = $_POST['address'];
+    }
+    if ($_FILES['profilePic']['name'] == "") {
+        $message11 = "<span class='text-danger'>Please Select Profile Picture</span>";
+    } else {
+        $profile = basename($_FILES['profilePic']['name']);
+    }
+    if (empty($_POST['phone'])) {
+        $message12 = "<span class='text-danger'>Please Enter Phone Number</span>";
+    } else {
+        $phone = $_POST['phone'];
+    }
+    if (isset($fname, $mname, $lanme, $username, $password, $age, $dob, $education, $email, $address, $profile, $phone)) {
+
+        $fileHandler = fopen($_SERVER['DOCUMENT_ROOT'] . "/PHP-Training/Form&File_Handling/File_Handling/Submit_data/formData.txt", "a+");
+        $hobbies = ucwords(implode(", ", $_POST['hobbies']));
+
+        fwrite($fileHandler, "All Forms Details\n\n First Name : " . $fname . "\n Middle Name : " . $mname . "\n Last Name : " . $lanme . "\n Username  :" . $username . "\n Password  :" . $password . "\n Age : " . $age . "\n Birthdate : " . $dob . "\n Education : " . $education . "\n Email ID : " . $email . "\n Address : " . $address . "\n Profile Image Name : " . $profile . "\n Gender : " . $_POST['gender'] . "\n Phone Number : " . $phone . "\n All Hobbies : " . $hobbies);
+        fclose($fileHandler);
+        $message = "<span class='text-success h4'>Form Submitted Successfully...</span>";
+    } else {
+        $message = "<span class='text-danger h4'>Something Went wrong...!</span>";
     }
 }
-?>
-<?php
-
-?>
-<div class="container-fluid  py-5">
+include('../../../header.php') ?>
+<div class="container-fluid py-5">
     <div class="row">
-     
+        <?php include('../../sidebar.php') ?>
         <div class="col-lg-9">
             <div class="file-data">
                 <div class="display-6">
-                    Create one form with below user inputs
-                    <ul class="h6">
-                        <li>I am a: Dropdown of “Child” and “Software Developer”</li>
-                        <li>My Name: Textbox to enter name</li>
-                        <li>My Age: Textbox to enter age</li>
-                        <li>Gender: Dropdown of “Male” and “Female”</li>
-                        <li>My Dreams (Visible only If you have selected “Child”): checkbox with list of “Doctor”,“Engineer”,“Lawyer” and “Police Officer”</li>
-                        <li>My Position (Visible only If you have selected “Software developer”): “Backend Developer”,“Front End Developer”, “Full Stack Developer”</li>
-                    </ul>
-                    On submission of form all details must be shown using appropriate class methods.
+                    Create a Program that contains a form (text, text area, select box, all input fields), submit information from the form and store submitted information to file.
                 </div>
                 <hr class="py-1">
-                <h4 class="mb-3 text-secondary">Fill the form...</h4>
-                <form action="" method="post">
-                    <div class="col">
-                        <div class="col-sm-5 mb-3">
+                <form action="" method="post" id="file-form" enctype="multipart/form-data">
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
                             <div class="input-group">
-                                <label class="input-group-text" for="iam">I am a </label>
-                                <select class="form-select" id="iam" name="iam">
-                                    <option selected disabled>Select</option>
-                                    <option value="child">Child</option>
-                                    <option value="software">Software Developer</option>
-                                </select>
+                                <label for="fname" class="input-group-text">First Name</label>
+                                <input type="text" name="fname" id="fname" class="form-control" placeholder="Enter First Name" value="<?php if (isset($_POST['fname'])) {
+                                                                                                                                            echo $_POST['fname'];
+                                                                                                                                        } ?>">
                             </div>
-                            <span><?php if (isset($message1)) {
-                                        echo $message1;
-                                    } ?></span>
+                            <div id="message1" class="text-danger">
+                                <?php if (isset($message1)) {
+                                    echo $message1;
+                                } ?>
+                            </div>
                         </div>
-                        <div class="col-sm-5 mb-3">
+                        <div class="col-sm-4">
                             <div class="input-group">
-                                <label for="name" class="input-group-text">My Name is </label>
-                                <input type="text" placeholder=". . ." name="name" class="form-control">
+                                <label for="mname" class="input-group-text">Middle Name</label>
+                                <input type="text" name="mname" id="mname" class="form-control" placeholder="Enter Middle Name" value="<?php if (isset($_POST['mname'])) {
+                                                                                                                                            echo $_POST['mname'];
+                                                                                                                                        } ?>">
                             </div>
-                            <span><?php if (isset($message2)) {
-                                        echo $message2;
-                                    } ?></span>
+                            <div id="message2" class="text-danger">
+                                <?php if (isset($message2)) {
+                                    echo $message2;
+                                } ?>
+                            </div>
                         </div>
-                        <div class="col-sm-5 mb-3">
+                        <div class="col-sm-4">
                             <div class="input-group">
-                                <label for="age" class="input-group-text">My Age is </label>
-                                <input type="number" placeholder=". . ." name="age" class="form-control">
+                                <label for="lname" class="input-group-text">Last Name</label>
+                                <input type="text" name="lname" id="lname" class="form-control" placeholder="Enter Last Name" value="<?php if (isset($_POST['lname'])) {
+                                                                                                                                            echo $_POST['lname'];
+                                                                                                                                        } ?>">
                             </div>
-                            <span><?php if (isset($message3)) {
-                                        echo $message3;
-                                    } ?></span>
+                            <div class="text-danger" id="message3">
+                                <?php if (isset($message3)) {
+                                    echo $message3;
+                                } ?>
+                            </div>
                         </div>
-                        <div class="col-sm-5 mb-3">
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
                             <div class="input-group">
-                                <label class="input-group-text" for="gender">My Gender is </label>
-                                <select class="form-select" id="gender" name="gender">
-                                    <option selected disabled>Select</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
-                                </select>
+                                <label for="username" class="input-group-text">Username</label>
+                                <input type="text" name="username" id="username" class="form-control" placeholder="Enter Username" value="<?php if (isset($_POST['username'])) {
+                                                                                                                                                echo $_POST['username'];
+                                                                                                                                            } ?>">
                             </div>
-                            <span><?php if (isset($message4)) {
-                                        echo $message4;
-                                    } ?></span>
-                        </div>
-                        <div class="col-sm-5 mb-3">
-                            <script>
-                                $(document).ready(function() {
-                                    $("#iam").change(function() {
-                                        $(this).find("option:selected").each(function() {
-                                            var val = $(this).attr("value");
-                                            if (val) {
-                                                $(".msg").not("." + val).hide();
-                                                $("." + val).show();
-                                            } else {
-                                                $(".msg").hide();
-                                            }
-                                        });
-                                    }).change();
-                                });
-                            </script>
-                            <div class="child msg">
-                                <h5 class="text-secondary h5">My Dreams : </h5>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="doctor" name="dreams[]" value="doctor">
-                                    <label class="form-check-label" for="doctor">Doctor</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="Engineer" name="dreams[]" value="engineer">
-                                    <label class="form-check-label" for="Engineer">Engineer</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="lawyer" name="dreams[]" value="lawyer">
-                                    <label class="form-check-label" for="lawyer">Lawyer</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="checkbox" id="policeOfficer" name="dreams[]" value="policeOfficer">
-                                    <label class="form-check-label" for="policeOfficer">Police Officer</label>
-                                </div>
-                            </div>
-                            <div class="software msg">
-                                <select class="form-select" id="position" name="position">
-                                    <option selected disabled>Select Position</option>
-                                    <option value="frontend">Frontend Developer</option>
-                                    <option value="backend">Backend Developer</option>
-                                    <option value="fullstack">Fullstack Developer</option>
-                                </select>
+                            <div class="text-danger" id="message4">
+                                <?php if (isset($message4)) {
+                                    echo $message4;
+                                } ?>
                             </div>
                         </div>
-                        <button class="btn btn-success" type="submit" name="detail" value="save">Submit</button>
+                        <div class="col-sm-6">
+                            <div class="input-group">
+                                <label for="password" class="input-group-text">password</label>
+                                <input type="password" name="password" id="password" class="form-control" placeholder="Enter Password" value="<?php if (isset($_POST['password'])) {
+                                                                                                                                                    echo $_POST['password'];
+                                                                                                                                                } ?>">
+                            </div>
+                            <div class="text-danger" id="message5">
+                                <?php if (isset($message5)) {
+                                    echo $message5;
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-6">
+                            <h5 class="text-secondary">Select Gender</h5>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="male" value="male" checked>
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="gender" id="others" value="others">
+                                <label class="form-check-label" for="others">Others</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <h5 class="text-secondary">Enter Age</h5>
+                            <div class="input-group">
+                                <label for="age" class="input-group-text">Age</label>
+                                <input type="number" name="age" id="age" class="form-control" placeholder="Enter Age" value="<?php if (isset($_POST['age'])) {
+                                                                                                                                    echo $_POST['age'];
+                                                                                                                                } ?>">
+                            </div>
+                            <div class="text-danger" id="message6">
+                                <?php if (isset($message6)) {
+                                    echo $message6;
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-4">
+                            <h5 class="text-secondary">Select Birthdate</h5>
+                            <div class="input-group">
+                                <label for="dob" class="input-group-text">Birthdate</label>
+                                <input type="date" name="dob" id="dob" class="form-control" value="<?php if (isset($_POST['dob'])) {
+                                                                                                        echo $_POST['dob'];
+                                                                                                    } ?>">
+                            </div>
+                            <div class="text-danger" id="message7">
+                                <?php if (isset($message7)) {
+                                    echo $message7;
+                                } ?>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="text-secondary">Select Education</h5>
+                            <select class="form-select" name="education" id="education">
+                                <option selected disabled>Select Education</option>
+                                <option value="illiterate" <?php if (isset($_POST['education']) && $_POST['education'] == "illiterate") {
+                                                                echo "selected='selected'";
+                                                            } ?>>Illiterate</option>
+                                <option value="Below SSC" <?php if (isset($_POST['education']) && $_POST['education'] == "Below SSC") {
+                                                                echo "selected='selected'";
+                                                            } ?>>Below SSC</option>
+                                <option value="SSC" <?php if (isset($_POST['education']) && $_POST['education'] == "SSC") {
+                                                        echo "selected='selected'";
+                                                    } ?>>SSC</option>
+                                <option value="HSC" <?php if (isset($_POST['education']) && $_POST['education'] == "HSC") {
+                                                        echo "selected='selected'";
+                                                    } ?>>HSC</option>
+                                <option value="Graduate" <?php if (isset($_POST['education']) && $_POST['education'] == "Garduate") {
+                                                                echo "selected='selected'";
+                                                            } ?>>Gradugate</option>
+                                <option value="Post Graduate" <?php if (isset($_POST['education']) && $_POST['education'] == "Post Graduate") {
+                                                                    echo "selected='selected'";
+                                                                } ?>>Post Gradugate</option>
+                            </select>
+                            <div class="text-danger" id="message8">
+                                <?php if (isset($message8)) {
+                                    echo $message8;
+                                } ?>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="text-secondary">Enter Email</h5>
+                            <div class="input-group">
+                                <label for="email" class="input-group-text">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" placeholder="xyz@gmail.com" value="<?php if (isset($_POST['email'])) {
+                                                                                                                                        echo $_POST['email'];
+                                                                                                                                    } ?>">
+                            </div>
+                        </div>
+                        <div class="text-danger" id="message9">
+                            <?php if (isset($message9)) {
+                                echo $message9;
+                            } ?>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h5 class="text-secondary">Choose Hobbies</h5>
+                        <div class="mb-4 d-flex justify-content-evenly">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="cricket" value="cricket" checked>
+                                <label class="form-check-label" for="cricket">Cricket</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="football" value="football">
+                                <label class="form-check-label" for="football">Football</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="reading" value="reading">
+                                <label class="form-check-label" for="reading">Reading</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="travel" value="travel">
+                                <label class="form-check-label" for="travel">Travel</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="gk" value="gk">
+                                <label class="form-check-label" for="gk">Gathering General Knowledge</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="writing" value="writing">
+                                <label class="form-check-label" for="writing">Writing</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="swimming" value="swimming">
+                                <label class="form-check-label" for="swimming">Swimming</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="checkbox" name="hobbies[]" id="travel" value="travel">
+                                <label class="form-check-label" for="travel">Travel</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-sm-5">
+                            <h5 class="text-secondary">Enter Address</h5>
+                            <textarea name="address" id="address" rows="3" class="form-control" placeholder="Enter Address"><?php if (isset($_POST['address'])) {
+                                                                                                                                echo $_POST['address'];
+                                                                                                                            } ?></textarea>
+                            <div class="text-danger" id="message10">
+                                <?php if (isset($message10)) {
+                                    echo $message10;
+                                } ?>
+                            </div>
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="mb-2">
+                                <h5 class="text-secondary">Select Profile Picture</h5>
+                                <input type="file" name="profilePic" id="profilePic" class="form-control">
+
+                                <div class="text-danger" id="message11">
+                                    <?php if (isset($message11)) {
+                                        echo $message11;
+                                    } ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <h5 class="text-secondary">Enter Phone Number</h5>
+                            <div class="input-group">
+                                <label for="phone" class="input-group-text">Phone No.</label>
+                                <input type="tel" name="phone" id="phone" placeholder="8989****89" class="form-control" value="<?php if (isset($_POST['phone'])) {
+                                                                                                                                    echo $_POST['phone'];
+                                                                                                                                } ?>">
+                            </div>
+                            <div class="text-danger" id="message12">
+                                <?php if (isset($message12)) {
+                                    echo $message12;
+                                } ?>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-success" name="submit" value="submit">Submit</button>
                     </div>
                 </form>
-                <?php
-                if (isset($name, $iam, $age, $gender)) {
-                    if ($iam == "child") {
-                        if (empty($_POST['dreams'])) {
-                            $message5 = "<span class='text-center text-danger'>Enter Position</span><br>";
-                        } else {
-                            foreach ($_POST['dreams'] as $value) {
-                                $allDreams[] = $value;
-                                $obj = new Child($name, $age, $age, $allDreams);
-                                $job = $obj->say_dreams();
-                                $greet = $obj->greet($name);
-                                $intro = $obj->introduce();
-                            }
-                        }
-                    }
-                    if ($iam == "software") {
-                        if (empty($_POST['position'])) {
-                            $message5 = "<span class='text-center text-danger'>Enter Position</span><br>";
-                        } else {
-                            $position = $_POST['position'];
-                            $obj = new SoftwareDeveloper($name, $age, $gender, $position);
-                            $greet = $obj->greet($name);
-                            $intro = $obj->introduce();
-                            $job = $obj->describeJob($position);
-                        }
-                    }
-                }
-                if (isset($intro, $job, $greet)) {
-                ?>
-                    <hr>
-                    <h4 class="text-secondary">
-                        <?php echo $greet; ?></h4>
-                    <h4 class="text-secondary">
-                        <?php echo $intro; ?></h4>
-                    <h4 class="text-secondary">
-                    <?php echo $job;
-                } ?></h4>
+                <hr>
+                <h4 class="text-center">
+                    <?php if (isset($message)) {
+                        echo $message;
+                    } ?></h4>
             </div>
         </div>
     </div>
 </div>
-<?php
+<?php include('../../../footer.php') ?>
 
-?>
+<script>
+    $(document).ready(function() {
+        $('#file-form').validate({
+            ignore: '.ignore, :hidden:not(".filereqire"):not(".req_question")', //ignore fields
+            submitHandler: function(form) {
+
+                var valid = true;
+                if ($('#fname').val() == '') {
+                    $("#message1").html("Please Enter First Name...");
+                    valid = false;
+                } else {
+                    $("#message1").html("");
+                }
+                if ($('#mname').val() == '') {
+                    $("#message2").html("Please Enter Middle Name...");
+                    valid = false;
+                } else {
+                    $("#message2").html("");
+                }
+                if ($('#lname').val() == '') {
+                    $("#message3").html("Please Enter Last Name...");
+                    valid = false;
+                } else {
+                    $("#message3").html("");
+                }
+                if ($('#username').val() == '') {
+                    $("#message4").html("Please Enter Username Name...");
+                    valid = false;
+                } else {
+                    $("#message4").html("");
+                }
+                if ($('#password').val() == '') {
+                    $("#message5").html("Please Enter Password Name...");
+                    valid = false;
+                } else {
+                    $("#message5").html("");
+                }
+                if ($('#age').val() == '') {
+                    $("#message6").html("Please Enter Age Name...");
+                    valid = false;
+                } else {
+                    $("#message6").html("");
+                }
+                if ($('#dob').val() == '') {
+                    $("#message7").html("Please Enter Birthdate Name...");
+                    valid = false;
+                } else {
+                    $("#message7").html("");
+                }
+                if ($('#education').val() == null) {
+                    $("#message8").html("Please Select Education...");
+                    valid = false;
+                } else {
+                    $("#message8").html("");
+                }
+                if ($('#email').val() == '') {
+                    $("#message9").html("Please Enter Email Name...");
+                    valid = false;
+                } else {
+                    $("#message9").html("");
+                }
+                if ($('#address').val() == '') {
+                    $("#message10").html("Please Enter Address Name...");
+                    valid = false;
+                } else {
+                    $("#message10").html("");
+                }
+                if ($('#profilePic').val() == '') {
+                    $("#message11").html("Please Select Profile Image...");
+                    valid = false;
+                } else {
+                    $("#message11").html("");
+                }
+                if ($('#phone').val() == '') {
+                    $("#message12").html("Please Enter Phone Number Name...");
+                    valid = false;
+                } else {
+                    $("#message12").html("");
+                }
+                if (valid) {
+                    form.submit();
+                }
+            }
+        });
+    });
+</script>
