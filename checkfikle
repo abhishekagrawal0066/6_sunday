@@ -1,0 +1,70 @@
+<?php
+$res = "";
+if (isset($_POST['submit'])) {
+    if ($_FILES['fileUpload']['name'] == "") {
+        $res = "Please upload file.";
+    } 
+    else {
+
+        $uploadOk = 1;
+
+        $fileName = $_FILES['fileUpload']['name'];
+        $fileType = $_FILES["fileUpload"]["type"];
+        $fileSize = $_FILES["fileUpload"]["size"];
+ 
+        $validType = array('text/plain');
+
+        $target_file = $_SERVER['DOCUMENT_ROOT'].'/assets/upload/php/formUrl/'.$fileName;
+    
+        if (!in_array($fileType,$validType)) {
+            $res = "Sorry, only text files are allowed.";
+            $uploadOk = 0;
+        }
+
+        if ($fileSize > 1000000) {
+            $res .= "<br/>Sorry, your file is too large.";
+            $uploadOk = 0;
+        }
+
+        if ($uploadOk == 1) {
+            $fileRead = fopen($_FILES["fileUpload"]["tmp_name"],'r');
+            $fileWrite = fopen($target_file,'w');
+            while(!feof($fileRead)){
+                fwrite($fileWrite,fgets($fileRead));
+            }
+            fclose($fileRead);
+            fclose($fileWrite);
+            
+            header("Location: writedFilesShowDownload.php?fileName=$fileName");
+        }
+    }
+}
+?>
+<?php include '../../header.php'; ?>
+<?php include '../sidebar.php' ?>
+<aside aria-label="" class="column_right" style="overflow-x: hidden !important">
+    <h1 class="path">PHP / Basic PHP-1 / Currency</h1>
+    <div class="right_content bg-dark text-white">
+        <ol type="1" start="1">
+            <li>Create a PHP script for redirect to another page.</li>
+        </ol>
+        <div class="mx-auto w-50 border border-4 p-4 m-5" style="border-radius: 13px;">
+            <form action="readWriteDownloadFile.php" method="post" enctype="multipart/form-data">
+                <h3 class="text-center mb-3">Upload Files</h3>
+                <div class="mb-3">
+                    <label for="file" class="form-label">Choose Files</label>
+                    <input type="file" class="form-control" name="fileUpload" id="file" autocomplete="off" placeholder="Please enter website">
+                    <small class="text-danger" id="err_file"></small>
+                </div>
+                <div class="d-flex justify-content-center mb-3">
+                    <input type="submit" class="btn btn-primary px-5" name="submit" onclick="return PHP_formURL_files_RW_sub()" value="submit">
+                </div>
+                <div>
+                    <strong class="text-danger">
+                        <?php echo ($res)??''; ?>
+                    </strong>
+                </div>
+            </form>
+        </div>
+    </div>
+    <?php include '../../footer.php'; ?>
