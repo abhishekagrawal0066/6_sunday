@@ -1,0 +1,24 @@
+$(document).ready(function() {
+    $("#check").on('click', function() {
+        var file = $("#fileName").val();
+        if (file == "") {
+            $("#message").html("<span class='text-danger'>Please enter file name</span>");
+        } else {
+            $.ajax({
+                URL: 'check_file_existance.php',
+                data: {
+                    'action': 'file_check',
+                    'filename': file
+                },
+                type: 'POST',
+                success: function(result) {
+                    $("#message").html(result);
+                    alert(result);
+                },
+                error: function(result) {
+                    alert(result);
+                }
+            });
+        }
+    })
+});
