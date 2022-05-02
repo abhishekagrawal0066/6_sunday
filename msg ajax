@@ -1,0 +1,36 @@
+$(document).ready(function() {
+    $("#send").on('click', function() {
+        var sender = $('#senderName').val();
+        var message = $('#message').val();
+        // if (sender == "") {
+        //     $('#message1').html('Please Enter Name');
+        // }
+        // if (message == "") {
+        //     $('#message2').html('Please Enter Message');
+        // }
+        $.ajax({
+            URL: 'chat_app.php',
+            data: {
+                'action': 'send_message',
+                'sender': sender,
+                'message': message
+            },
+            type: 'post',
+            success: function(result) {
+                alert("Message sent successfully");
+            }
+        })
+    });
+    setInterval(function() {
+        $.ajax({
+            URL: 'chat_app.php',
+            type: 'post',
+            data: {
+                'read_action': 'read_message',
+            },
+            success: function(read) {
+                $("#chats").html(read);
+            }
+        })
+    }, 1000);
+})
