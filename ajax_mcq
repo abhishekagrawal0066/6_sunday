@@ -1,0 +1,112 @@
+<?php
+session_start();
+
+$vars = 0;
+if ($_POST['action'] == "getQuestions") {
+    $que_id = $_POST['que_id'];
+
+    $que_list = array(
+        '1' => array(
+            'questions' => "1. What is session",
+            'options' => array(
+                "You want to pass values from one par.",
+                "You want to pass values from one page to er.",
+                "You want to pass values from one page other.",
+                "You want to pass values from one page to another."
+            )
+        ),
+        '2' => array(
+            'questions' => "2. What is cookie",
+            'options' => array(
+                "You want to pass values from one page to anor.",
+                "You want to pass values from one pto another.",
+                "You want to pass values from one page tother.",
+                "You want to pass valuerom one page to another."
+            )
+        ),
+        '3' => array(
+            'questions' => "3. What is File",
+            'options' => array(
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another."
+            )
+        ),
+        '4' => array(
+            'questions' => "4. What is Input",
+            'options' => array(
+                "You want to pass values from one page to .",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another."
+            )
+        ),
+        '5' => array(
+            'questions' => "5. What is Ajax",
+            'options' => array(
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another.",
+                "You want to pass values from one page to another."
+            )
+        )
+    );
+
+    //   $option_convert = implode("<br>",$que_list[$que_id]['options']);
+    foreach ($que_list[$que_id]['options'] as $key => $value) {
+        $values .=  '<input type="checkbox" name="q1[]" value="' . $value .'"'.(in_array($value,$_SESSION["que1"])?"checked":"").' >' . $value . "<br>";
+    }
+
+    echo "<div id='.$que_list[$que_id].'><p>" . $que_list[$que_id]['questions'] . "</p>" . $values . "
+        </div>
+        <input type='submit' id='submit' class='btn btn-danger' name='submit' value='submit'>";
+        // echo $_SESSION["que1"]; 
+    exit;
+}
+// if(in_array("che'.$vars.'",$_SESSION["que1"])){ echo "checked";}
+// echo $_SESSION["que1"] = implode(',', $_POST['q1']);
+$_SESSION['que1'] = $_POST['q1'];
+// print_r($_SESSION['que1']);
+
+?>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <p>reate an application for online web survey. Create a form with a single question with multiple answer. Once user submit answer and come again on same page then display selected answers to that customer.</p>
+    <div class="row align-items-start">
+        <div class="col">
+            <button name="btn1" id="1" value="btn1" class="question btn btn-primary">1</button>
+
+            <button name="btn2" id="2" value="btn2" class="question btn btn-primary">2</button>
+
+            <button name="btn3" id="3" value="btn3" class="question btn btn-primary">3</button>
+
+            <button name="btn4" id="4" value="btn4" class="question btn btn-primary">4</button>
+
+            <button name="btn5" id="5" value="btn5" class="question btn btn-primary">5</button>
+        </div>
+    </div>
+    <form method="POST" id="quizform">
+
+    </form>
+    <hr>
+    <?php
+        
+        foreach($_SESSION['que1'] as $val ) {
+            echo $val . "<br>";
+        }
+    ?>
+    <script type="text/javascript" src="ajax_msg.js"></script>
+</body>
+
+</html>
