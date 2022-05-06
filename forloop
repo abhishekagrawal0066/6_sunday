@@ -1,0 +1,87 @@
+<?php
+session_start();
+$product_det = array(
+    'product_one' => array(
+        'product_id' => "1",
+        'product_name' => 'T-Shirt',
+        'product_description' => 'Brown Chest-Printed T-Shirt',
+        'product_price' => '712',
+        'product_image' => 'product_image/image1.webp',
+    ),
+    'product_two' => array(
+        'product_id' => "2",
+        'product_name' => 'Blazer',
+        'product_description' => 'White Checked Single Breasted Casual Blazer',
+        'product_price' => '5000',
+        'product_image' => 'product_image/image2.webp',
+    ),
+    'product_three' => array(
+        'product_id' => "3",
+        'product_name' => 'Candles',
+        'product_description' => 'Vanilla Scented Set Of White Color Round Candles',
+        'product_price' => '1000',
+        'product_image' => 'product_image/image3.webp',
+    ),
+    'product_four' => array(
+        'product_id' => "4",
+        'product_name' => 'Kettle',
+        'product_description' => 'Muted Orange Aluminium Painted Kettle',
+        'product_price' => '712',
+        'product_image' => 'product_image/image4.jpeg',
+    ),
+    'product_five' => array(
+        'product_id' => "5",
+        'product_name' => 'Towel',
+        'product_description' => 'Bianca Turkish Hammam Towel',
+        'product_price' => '1500',
+        'product_image' => 'product_image/image5.webp',
+    )
+);
+echo "<pre>";
+foreach($product_det as $key => $pro_value){
+
+   $product_det .= '<div class="col-md-4 mb-3">
+        <div class="card bg-light bg-light-gradient text-black shadow border border-info" style="width: 20rem;">
+            <div class="mx-2 position-absolute">
+                <div class="form-check text-center h3">
+                    <input class="form-check-input border-4 border-primary" name="products" type="checkbox" value="' . $pro_value["product_id"] . '" id="product_' . $pro_value["product_id"] . '">
+                    </div>
+                </div>
+            <img src="images/' . $pro_value["product_image"] . '" class="card-img-tops" alt="' . $pro_value["product_name"] . '" height="180px" width="auto">
+            <div class="card-body">
+                <h5 class="card-title">' . $pro_value["product_name"] . '</h5>
+                <p class="card-text">' . $pro_value["product_description"] . '</p>
+                <hr>
+                    
+                    <div class="text-primary fw-bolder">' . $pro_value["product_price"] . ' &#8377;</div>
+                <div class="input-group">
+                    <button type="button" id="sub" class="btn btn-outline-primary sub"><em class="fa fa-minus"></em></button>
+                    <input type="number" name="' .$pro_value["product_id"] . '_quantity" id="' .$pro_value["product_id"] . '_quantity" placeholder="Quantity" value="1" min="1" max="5" class="form-control fw-bolder text-center border border-primary quantity">
+                    <button type="button" id="add" class="btn btn-outline-primary add" class=""><em class="fa fa-plus"></em></button>
+                </div>
+            </div>
+        </div>
+    </div>';
+}
+// echo '<br>Abhi<br>File: '. __FILE__.'<br>Line: '.__LINE__.'<br><pre>';print_r($product_det);echo '</pre>'; die();
+?>
+
+<?php
+// echo __DIR__;
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<div class="row">
+                                <?php echo $product_det ?? ''; ?>
+                            </div>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</body>
+</html>
