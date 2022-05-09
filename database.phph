@@ -1,0 +1,22 @@
+<?php
+include('registration.php');
+    $obj = new crud;
+    $obj->select('emp',array('name','dob'));
+    echo "<br>";
+
+?>
+
+<?php
+class crud{
+    function select($table,$selectperametrt='*'){
+        if($selectperametrt == '*'){
+            echo " SELECT ".$selectperametrt." from ".$table;
+        }else if(is_array($selectperametrt)){
+         $select = implode(',',$selectperametrt);
+         echo  "Select ".$select." from ".$table.' ; ';
+        }else{
+            echo "Select ". $selectperametrt." from ".$table;
+        }
+    }
+}
+?>
