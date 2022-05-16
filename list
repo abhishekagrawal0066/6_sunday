@@ -1,0 +1,156 @@
+<?php
+session_start();
+//session_destroy();
+include('../lib/database.php');
+
+if (!isset($_SESSION['admin_name'])) {
+    header("location: index.php");
+}
+$obj = new crud();
+
+
+// foreach($countries as $value){
+//     $countries .= $value['']
+// }
+//echo '<br>Abhi<br>File: '. __FILE__.'<br>Line: '.__LINE__.'<br><pre>';print_r($countries);echo '</pre>'; die();
+$list_emp = $obj->mysql_select("employee");
+
+$no = 1;
+foreach ($list_emp as $row) {
+    if ($row['status'] == "1") {
+        $status = '<input class="form-check-input" type="checkbox" role="switch" checked name="switch" >';
+    } else {
+        $status = '<input class="form-check-input" type="checkbox" role="switch"  name="switch" >';
+    }
+    $country = $obj->mysql_select("country", array("country_name"), array("country_id"=>array($row['country'], "=", "", "")));
+    $state = $obj->mysql_select("state", array("state_name"), array("state_id"=>array($row['state'], "=", "", "")));
+    $city = $obj->mysql_select("city", array("city_name"), array("city_id"=>array($row['city'], "=", "", "")));
+    // echo '<br>Hiren<br>File: '. __FILE__.'<br>Line: '.__LINE__.'<br><pre>';print_r($country);echo '</pre>'; die();
+    $list_employee .= ' 
+    <tr>
+        <td class="text-center">' . $no++ . '</td>
+        <td> <img id="pimg" src="../lib/Image/' . $row['emp_id'] . '/' . $row["profile_pic"] . '" class="card-img-tops" alt="photo" height="120px" width="auto"></td>
+        <td>' . $row['name'] . '<br>' . $row['email'] . '<br>' . $row['birth_date'] . '</td>
+        <td>' . $row['address'] . '<br>' . $country[0]['country_name'] . '<br>' . $state[0]['state_name'] . '<br>' . $city[0]['city_name'] . '<br>' . $row['pincode'] . '<br>' . '</td>
+        <td>
+            <div class="form-check form-switch">
+               ' . $status . '
+                <label class="form-check-label" for="flexSwitchCheckDefault"> Status </label>
+            </div>
+        </td> 
+        <td class="td-actions text-right">
+            <button type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title=""><a href="update_employee.php?userid=' . $row["emp_id"] . '"
+                <i class="material-icons">edit</i>
+            </button>
+            <button type="button" rel="tooltip" class="btn btn-success btn-just-icon btn-sm" data-original-title="" title=""><a href="delete_employee.php?userid=' . $row["emp_id"] . '"
+                <i class="material-icons">close</i></a>
+            </button>
+        </td>
+    </tr>';
+}
+// $countryid = $row['country'];
+// $whereCondition = array(
+//     "country_id" => array(
+//         $countryid,
+//         "=",
+//         "",
+//         ""
+//     )
+// );
+// echo '<br>Abhi<br>File: '. __FILE__.'<br>Line: '.__LINE__.'<br><pre>';print_r($whereCondition);echo '</pre>'; die();
+// $countries = $obj->mysql_select("country");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand text-light" href="#"> RadixTraining</a>
+            <button class="navbar-toggler  bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item ">
+                        <a class="nav-link text-light " href="dashboard.php">HOME</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+
+                    <!-- <input class="btn btn-outline-light bg-primary text-light" onclick="myFunction()" type="submit" value="Search">Search</button> -->
+                    <a href="logout.php" class="btn btn-primary">Logout</a>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-md-3 bg-secondary ">
+            <div class="d-flex flex-column flex-shrink-0 p-3 text-white " style="height: 800px;">
+                <ul class="nav nav-pills flex-column mb-auto" id="sidebar_all">
+                    <li class="nav-item ">
+                        <a href="#submenu2" class="nav-link px-0 align-middle text-dark" data-bs-toggle="collapse">
+                            <svg class="bi me-2" width="16" height="16">
+                                <use xlink:href="#home" />
+                            </svg> Day1
+                        </a>
+                        <ul class="collapse show nav flex-column p-1" id="submenu2" data-bs-parent="#menu">
+                            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                <span class="d-none d-sm-inline p-4">Manage Employee</span></a>
+                            <ul class="collapse show nav flex-column" id="submenu3" data-bs-parent="#menu">
+                                <li class="w-100 px-5 pt-2 pl-2">
+                                    <a href="../Admin/list_employee.php" class="nav-link px-0"> <span class="d-none d-sm-inline text-light  p-2">List Employee</span></a>
+                                </li>
+
+                            </ul>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 pt-3">
+            <div class="pt-5">
+                <div class="table-responsive">
+                    <a href="add_employee.php" class="btn btn-danger bg-primary text-center">Add</a>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="text-center">#</th>
+                                <th>Photo</th>
+                                <th>Name </th>
+                                <th> Address </th>
+                                <th>Status</th>
+                                <th class="text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <?php echo $list_employee; ?>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
